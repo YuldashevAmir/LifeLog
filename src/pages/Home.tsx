@@ -23,7 +23,7 @@ export const Home = () => {
 					watch your story unfold!
 				</p>
 				<Button
-					onClick={() => navigate('/login')}
+					onClick={() => navigate('/authorization')}
 					className='h-10 text-lg font-bold w-40'
 				>
 					Start Your Log

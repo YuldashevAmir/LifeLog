@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -13,12 +14,13 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
-	email: z.string().min(2, {
-		message: 'Email must be at least 2 characters.',
+	email: z.string().min(4, {
+		message: 'Email must be at least 4 characters.',
 	}),
 	password: z.string().min(6, {
 		message: 'Password must be at least 6 characters.',
@@ -27,6 +29,10 @@ const formSchema = z.object({
 
 export function LoginForm() {
 	const navigate = useNavigate()
+
+	const [showPassword, setShowPassword] = useState(false)
+
+	const togglePasswordVisibility = () => setShowPassword(prev => !prev)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -68,7 +74,20 @@ export function LoginForm() {
 						<FormItem>
 							<FormLabel>Password</FormLabel>
 							<FormControl>
-								<Input type='password' placeholder='password' {...field} />
+								<div className='relative'>
+									<Input
+										type={showPassword ? 'text' : 'password'}
+										placeholder='password'
+										{...field}
+									/>
+									<button
+										type='button'
+										onClick={togglePasswordVisibility}
+										className='absolute top-1/2 right-3 transform -translate-y-1/2'
+									>
+										{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+									</button>
+								</div>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
