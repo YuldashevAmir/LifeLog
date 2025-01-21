@@ -4,6 +4,13 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select'
 import { useToggle } from '@/hooks/useToggle'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import clsx from 'clsx'
@@ -56,6 +63,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 							<DialogHeader>
 								<DialogTitle>Settings</DialogTitle>
 							</DialogHeader>
+							<div className='flex flex-col gap-4'>
+								<div>amir1008047@gmail.com</div>
+								<div className='flex justify-between'>
+									<div className='font-semibold'>Theme</div>
+									<Select>
+										<SelectTrigger className='w-[180px]'>
+											<SelectValue placeholder='Theme' />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value='light'>Light</SelectItem>
+											<SelectItem value='dark'>Dark</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
 						</DialogContent>
 					</Dialog>
 				</div>

@@ -84,16 +84,16 @@ export const AddNewStory = () => {
 			<div className='flex flex-col gap-2'>
 				<h5 className='font-semibold'>What was happen today</h5>
 				<div className='grid w-full gap-1.5'>
-					<Label htmlFor='message'>Morning</Label>
-					<Textarea placeholder='Morning events...' id='message' />
+					<Label htmlFor='morning'>Morning</Label>
+					<Textarea placeholder='Morning events...' id='morning' />
 				</div>
 				<div className='grid w-full gap-1.5'>
-					<Label htmlFor='message'>Day</Label>
-					<Textarea placeholder='Day events...' id='message' />
+					<Label htmlFor='day'>Day</Label>
+					<Textarea placeholder='Day events...' id='day' />
 				</div>
 				<div className='grid w-full gap-1.5'>
-					<Label htmlFor='message'>Evening</Label>
-					<Textarea placeholder='Evening events...' id='message' />
+					<Label htmlFor='evening'>Evening</Label>
+					<Textarea placeholder='Evening events...' id='evening' />
 				</div>
 				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='message' className='font-semibold mt-4'>
