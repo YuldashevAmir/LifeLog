@@ -1,3 +1,4 @@
+import { AddNewStory } from '@/pages/AddNewStory'
 import { Authorization } from '@/pages/Authorization'
 import { Dashboard } from '@/pages/Dashboard'
 import { Home } from '@/pages/Home'
@@ -9,6 +10,7 @@ export const AppRouter = () => {
 				<Route element={<Home />} path='/' />
 				<Route element={<Authorization />} path='/authorization' />
 				<Route element={<Dashboard />} path='/dashboard' />
+				<Route element={<AddNewStory />} path='/addNewStory' />
 			</Routes>
 		</BrowserRouter>
 	)
