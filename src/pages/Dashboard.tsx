@@ -1,12 +1,61 @@
+import { auth, db } from '@/components/firebase'
 import { Sidebar } from '@/components/sidebar'
-
+import { doc, getDoc } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-export const Dashboard = () => {
+
+interface UserDetails {
+	email: string
+}
+
+export const Dashboard: React.FC = () => {
 	const navigate = useNavigate()
+	const [userDetails, setUserDetails] = useState<UserDetails | null>(null)
+
+	const fetchUserData = async () => {
+		auth.onAuthStateChanged(async user => {
+			if (user) {
+				try {
+					const docRef = doc(db, 'users', user.uid)
+					const docSnap = await getDoc(docRef)
+
+					if (docSnap.exists()) {
+						setUserDetails(docSnap.data() as UserDetails)
+						console.log(docSnap.data())
+					} else {
+						console.log('No such document!')
+					}
+				} catch (error) {
+					console.error('Error fetching user data:', error)
+				}
+			} else {
+				navigate('/authorization')
+			}
+		})
+	}
+
+	useEffect(() => {
+		fetchUserData()
+	}, [])
+
+	const handleLogout = async () => {
+		try {
+			await auth.signOut()
+			navigate('/authorization')
+		} catch (error) {
+			console.error('Error during logout:', error)
+		}
+	}
 
 	return (
 		<Sidebar>
 			<div className='p-6'>
+				{userDetails && (
+					<div>
+						<div>{userDetails.email}</div>
+						<button onClick={() => handleLogout()}>Logout</button>
+					</div>
+				)}
 				<div className='flex flex-wrap gap-6'>
 					<div
 						className='relative bg-muted w-72 h-44 rounded-xl flex justify-center items-center cursor-pointer hover:bg-primary-foreground transition-all duration-300'
