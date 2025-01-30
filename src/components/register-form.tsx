@@ -17,6 +17,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { registerUser } from '@/firebase/userService'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const formSchema = z
 	.object({
@@ -71,7 +72,18 @@ export function RegisterForm() {
 			await registerUser(userData)
 			navigate('/dashboard')
 		} catch (error) {
-			console.log('error', error)
+			if (error instanceof Error) {
+				if (error.message === 'auth/email-already-in-use') {
+					toast.error('Email already in use', {
+						position: 'bottom-center',
+						autoClose: 3000,
+					})
+				} else {
+					toast.error('An error occurred. Please try again.')
+				}
+			} else {
+				toast.error('An unknown error occurred.')
+			}
 		}
 	}
 

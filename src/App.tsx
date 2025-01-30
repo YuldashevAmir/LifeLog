@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { StoryProvider } from './context/storyContext'
 import { auth } from './firebase/firebase'
 import { useGetUserData } from './hooks/useGetUserData'
 import { AppRouter } from './router/AppRouter'
+import { TUser } from './types/userTypes'
 
 function App() {
-	const { userData, loading } = useGetUserData()
+	const { userData } = useGetUserData()
 
-	const [userInfo, setUserInfo] = useState(null)
+	const [userInfo, setUserInfo] = useState<TUser | null>(null)
 	useEffect(() => {
 		auth.onAuthStateChanged(user => {
-			setUserInfo(user)
+			setUserInfo(user as TUser | null)
 		})
 	}, [])
 
@@ -19,7 +23,12 @@ function App() {
 		}
 	}, [userData])
 
-	return <AppRouter user={userInfo} />
+	return (
+		<StoryProvider>
+			<AppRouter user={userInfo} />
+			<ToastContainer />
+		</StoryProvider>
+	)
 }
 
 export default App

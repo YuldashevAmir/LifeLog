@@ -1,6 +1,5 @@
-'use client'
-
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -48,7 +47,18 @@ export function LoginForm() {
 			await loginUser(userData)
 			navigate('/dashboard')
 		} catch (error) {
-			console.log('error', error)
+			if (error instanceof Error) {
+				if (error.message === 'auth/invalid-credential') {
+					toast.error('Incorrect Email or Password', {
+						position: 'bottom-center',
+						autoClose: 3000,
+					})
+				} else {
+					toast.error('An error occurred. Please try again.')
+				}
+			} else {
+				toast.error('An unknown error occurred.')
+			}
 		}
 	}
 

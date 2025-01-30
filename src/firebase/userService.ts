@@ -1,4 +1,5 @@
 import { TUser } from '@/types/userTypes'
+import { FirebaseError } from 'firebase/app'
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -7,20 +8,39 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from './firebase'
 
 export const registerUser = async ({ email, password }: TUser) => {
-	await createUserWithEmailAndPassword(auth, email, password)
+	try {
+		await createUserWithEmailAndPassword(auth, email, password)
 
-	const user = auth.currentUser
-	if (user) {
-		await setDoc(doc(db, 'users', user.uid), {
-			uid: user.uid,
-			email: user.email,
-			theme: 'light',
-		})
+		const user = auth.currentUser
+		if (user) {
+			await setDoc(doc(db, 'users', user.uid), {
+				uid: user.uid,
+				email: user.email,
+				theme: 'light',
+			})
+		}
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			const firebaseError = error as FirebaseError
+			throw new Error(firebaseError.code)
+		} else {
+			throw new Error('unknown error')
+		}
 	}
 }
 
 export const loginUser = async ({ email, password }: TUser) => {
-	await signInWithEmailAndPassword(auth, email, password)
+	try {
+		const response = await signInWithEmailAndPassword(auth, email, password)
+		return response
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			const firebaseError = error as FirebaseError
+			throw new Error(firebaseError.code)
+		} else {
+			throw new Error('unknown error')
+		}
+	}
 }
 
 export const logoutUser = async () => {

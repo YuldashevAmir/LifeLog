@@ -18,14 +18,16 @@ import { Label } from '@radix-ui/react-label'
 import { X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export const AddNewStory = () => {
 	const navigate = useNavigate()
 
 	const [story, setStory] = useState<TStory>({
 		uid: '',
-		mood: 'sad',
+		mood: '&#9785;',
 		title: '',
+		description: '',
 		morning: '',
 		day: '',
 		evening: '',
@@ -46,8 +48,18 @@ export const AddNewStory = () => {
 	}, [])
 
 	const handleAddNewStory = async () => {
-		const response = await addStory(story)
-		console.log('response', response)
+		for (const key of Object.keys(story) as (keyof TStory)[]) {
+			if (!story[key]) {
+				toast.error('Fill all fields', {
+					position: 'bottom-center',
+					autoClose: 2000,
+				})
+				return
+			}
+		}
+
+		await addStory(story)
+		navigate('/dashboard')
 	}
 
 	return (
@@ -117,6 +129,14 @@ export const AddNewStory = () => {
 			<div className='flex flex-col gap-2'>
 				<h5 className='font-semibold'>What was happen today</h5>
 				<div className='grid w-full gap-1.5'>
+					<Label htmlFor='title'>Title</Label>
+					<Textarea
+						onChange={e => setStory({ ...story, title: e.target.value })}
+						placeholder='Title of the day ...'
+						id='title'
+					/>
+				</div>
+				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='morning'>Morning</Label>
 					<Textarea
 						onChange={e => setStory({ ...story, morning: e.target.value })}
@@ -141,13 +161,13 @@ export const AddNewStory = () => {
 					/>
 				</div>
 				<div className='grid w-full gap-1.5'>
-					<Label htmlFor='message' className='font-semibold mt-4'>
+					<Label htmlFor='description' className='font-semibold mt-4'>
 						General feelings
 					</Label>
 					<Textarea
-						onChange={e => setStory({ ...story, title: e.target.value })}
+						onChange={e => setStory({ ...story, description: e.target.value })}
 						placeholder='Feelings...'
-						id='message'
+						id='description'
 					/>
 				</div>
 				<Button

@@ -62,12 +62,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 				>
 					Dashboard
 				</div>
-				<div
+				{/* <div
 					className='bg-background rounded-lg py-2 pl-2 font-regular  cursor-pointer flex'
 					onClick={() => navigate('/statistics')}
 				>
 					Statistics
-				</div>
+				</div> */}
 			</div>
 			<div className='flex flex-col w-full'>
 				<div className='h-20 flex justify-between items-center px-6'>

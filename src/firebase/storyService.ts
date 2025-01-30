@@ -30,6 +30,7 @@ export const addStory = async ({
 	uid,
 	mood,
 	title,
+	description,
 	morning,
 	day,
 	evening,
@@ -38,6 +39,7 @@ export const addStory = async ({
 		const response = await addDoc(collection(db, 'stories'), {
 			uid,
 			title,
+			description,
 			mood,
 			morning,
 			day,

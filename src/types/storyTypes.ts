@@ -5,6 +5,7 @@ export type TStory = {
 	uid: string
 	mood: string
 	title: string
+	description: string
 	morning: string
 	day: string
 	evening: string
