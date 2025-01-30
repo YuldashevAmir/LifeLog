@@ -11,13 +11,44 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { auth } from '@/firebase/firebase'
+import { addStory } from '@/firebase/storyService'
+import { TStory } from '@/types/storyTypes'
 import { Label } from '@radix-ui/react-label'
 import { X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 export const AddNewStory = () => {
 	const navigate = useNavigate()
-	const [mood, setMood] = useState<string>('sad')
+
+	const [story, setStory] = useState<TStory>({
+		uid: '',
+		mood: 'sad',
+		title: '',
+		morning: '',
+		day: '',
+		evening: '',
+	})
+
+	const fetchUserData = async () => {
+		auth.onAuthStateChanged(async user => {
+			if (user) {
+				setStory({ ...story, uid: user.uid })
+			} else {
+				navigate('/authorization')
+			}
+		})
+	}
+
+	useEffect(() => {
+		fetchUserData()
+	}, [])
+
+	const handleAddNewStory = async () => {
+		const response = await addStory(story)
+		console.log('response', response)
+	}
 
 	return (
 		<div className='flex flex-col max-w-[700px] mx-auto py-10 px-2 gap-6'>
@@ -45,37 +76,39 @@ export const AddNewStory = () => {
 			</div>
 			<div className='flex flex-col gap-2'>
 				<h5 className='font-semibold'>Choose your mood for today</h5>
-				<Tabs defaultValue='sad' onValueChange={value => setMood(value)}>
+				<Tabs
+					defaultValue='sad'
+					onValueChange={value => setStory({ ...story, mood: value })}
+				>
 					<TabsList className='h-full flex-wrap justify-start'>
-						<TabsTrigger className='w-12 h-full text-lg' value='sad'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#9785;'>
 							&#9785;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='disappointed'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128543;'>
 							&#128543;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='meh'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128528;'>
 							&#128528;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='neutral'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128529;'>
 							&#128529;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='content'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128578;'>
 							&#128578;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='happy'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128522;'>
 							&#128522;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='joyful'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128515;'>
 							&#128515;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='excited'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128513;'>
 							&#128513;
 						</TabsTrigger>
-						<TabsTrigger className='w-12 h-full text-lg' value='thrilled'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128518;'>
 							&#128518;
 						</TabsTrigger>
-
-						<TabsTrigger className='w-12 h-full text-lg' value='excellent'>
+						<TabsTrigger className='w-12 h-full text-lg' value='&#128516;'>
 							&#128516;
 						</TabsTrigger>
 					</TabsList>
@@ -85,24 +118,40 @@ export const AddNewStory = () => {
 				<h5 className='font-semibold'>What was happen today</h5>
 				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='morning'>Morning</Label>
-					<Textarea placeholder='Morning events...' id='morning' />
+					<Textarea
+						onChange={e => setStory({ ...story, morning: e.target.value })}
+						placeholder='Morning events...'
+						id='morning'
+					/>
 				</div>
 				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='day'>Day</Label>
-					<Textarea placeholder='Day events...' id='day' />
+					<Textarea
+						onChange={e => setStory({ ...story, day: e.target.value })}
+						placeholder='Day events...'
+						id='day'
+					/>
 				</div>
 				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='evening'>Evening</Label>
-					<Textarea placeholder='Evening events...' id='evening' />
+					<Textarea
+						onChange={e => setStory({ ...story, evening: e.target.value })}
+						placeholder='Evening events...'
+						id='evening'
+					/>
 				</div>
 				<div className='grid w-full gap-1.5'>
 					<Label htmlFor='message' className='font-semibold mt-4'>
 						General feelings
 					</Label>
-					<Textarea placeholder='Feelings...' id='message' />
+					<Textarea
+						onChange={e => setStory({ ...story, title: e.target.value })}
+						placeholder='Feelings...'
+						id='message'
+					/>
 				</div>
 				<Button
-					onClick={() => navigate('/dashboard')}
+					onClick={() => handleAddNewStory()}
 					className='w-40 mt-4 text-base font-bold'
 				>
 					Add New Story

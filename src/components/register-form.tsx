@@ -12,12 +12,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
 import { Eye, EyeOff } from 'lucide-react'
+
+import { registerUser } from '@/firebase/userService'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { auth, db } from './firebase'
 
 const formSchema = z
 	.object({
@@ -69,18 +68,7 @@ export function RegisterForm() {
 
 	async function onSubmit(userData: z.infer<typeof formSchema>) {
 		try {
-			await createUserWithEmailAndPassword(
-				auth,
-				userData.email,
-				userData.password
-			)
-			const user = auth.currentUser
-			console.log('user', user)
-			if (user) {
-				await setDoc(doc(db, 'users', user.uid), {
-					email: user.email,
-				})
-			}
+			await registerUser(userData)
 			navigate('/dashboard')
 		} catch (error) {
 			console.log('error', error)

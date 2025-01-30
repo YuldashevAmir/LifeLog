@@ -13,12 +13,11 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { loginUser } from '@/firebase/userService'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signInWithEmailAndPassword } from 'firebase/auth'
 import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { auth } from './firebase'
 
 const formSchema = z.object({
 	email: z.string().min(4, {
@@ -46,8 +45,7 @@ export function LoginForm() {
 
 	async function onSubmit(userData: z.infer<typeof formSchema>) {
 		try {
-			await signInWithEmailAndPassword(auth, userData.email, userData.password)
-
+			await loginUser(userData)
 			navigate('/dashboard')
 		} catch (error) {
 			console.log('error', error)

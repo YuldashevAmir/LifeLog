@@ -11,12 +11,16 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
-import { useToggle } from '@/hooks/useToggle'
+import { logoutUser, updateUserTheme } from '@/firebase/userService'
+import { useGetUserData } from '@/hooks/useGetUserData'
+import { useToggle } from '@/hooks/useToggle.ts'
+import { TUser } from '@/types/userTypes'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 import { AlignJustify, Settings, X } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from './ui/button'
 interface SidebarProps {
 	children: React.ReactNode
 }
@@ -24,6 +28,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 	const [state, toggle] = useToggle() as [boolean, () => void]
 
 	const navigate = useNavigate()
+
+	const handleLogoutt = async () => {
+		try {
+			await logoutUser()
+			navigate('/authorization')
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const { userData, loading } = useGetUserData()
+
+	const handleUpdateTheme = async (theme: 'light' | 'dark') => {
+		if (userData) {
+			await updateUserTheme({ theme, uid: userData.uid } as Partial<TUser>)
+		}
+	}
 
 	return (
 		<div className='flex'>
@@ -52,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 				<div className='h-20 flex justify-between items-center px-6'>
 					<AlignJustify
 						onClick={() => toggle()}
-						className='text-foreground cursor-pointer'
+						className='text-foreground cursor-pointer lg:w-0'
 					/>
 
 					<Dialog>
@@ -63,21 +84,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 							<DialogHeader>
 								<DialogTitle>Settings</DialogTitle>
 							</DialogHeader>
-							<div className='flex flex-col gap-4'>
-								<div>amir1008047@gmail.com</div>
-								<div className='flex justify-between'>
-									<div className='font-semibold'>Theme</div>
-									<Select>
-										<SelectTrigger className='w-[180px]'>
-											<SelectValue placeholder='Theme' />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value='light'>Light</SelectItem>
-											<SelectItem value='dark'>Dark</SelectItem>
-										</SelectContent>
-									</Select>
+							{loading ? (
+								<div>loading...</div>
+							) : (
+								<div className='flex flex-col gap-4'>
+									<div>{userData?.email}</div>
+									<div className='flex justify-between'>
+										<div className='font-semibold'>Theme</div>
+										<Select
+											defaultValue={userData?.theme}
+											onValueChange={value =>
+												handleUpdateTheme(value as 'light' | 'dark')
+											}
+										>
+											<SelectTrigger className='w-[180px]'>
+												<SelectValue placeholder='Theme' />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value='light'>Light</SelectItem>
+												<SelectItem value='dark'>Dark</SelectItem>
+											</SelectContent>
+										</Select>
+									</div>
+									<Button className='max-w-20' onClick={() => handleLogoutt()}>
+										Logout
+									</Button>
 								</div>
-							</div>
+							)}
 						</DialogContent>
 					</Dialog>
 				</div>
