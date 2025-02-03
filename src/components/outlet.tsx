@@ -21,10 +21,10 @@ import { AlignJustify, Settings, X } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from './ui/button'
-interface SidebarProps {
+interface OutletProps {
 	children: React.ReactNode
 }
-export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+export const Outlet: React.FC<OutletProps> = ({ children }) => {
 	const [state, toggle] = useToggle() as [boolean, () => void]
 
 	const navigate = useNavigate()
