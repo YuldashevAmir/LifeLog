@@ -4,75 +4,45 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select'
-import { logoutUser, updateUserTheme } from '@/firebase/userService'
-import { useGetUserData } from '@/hooks/useGetUserData'
 import { useToggle } from '@/hooks/useToggle.ts'
-import { TUser } from '@/types/userTypes'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 import { AlignJustify, Settings, X } from 'lucide-react'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
+import { Setting } from './setting-modal'
 interface OutletProps {
 	children: React.ReactNode
 }
 export const Outlet: React.FC<OutletProps> = ({ children }) => {
-	const [state, toggle] = useToggle() as [boolean, () => void]
-
-	const navigate = useNavigate()
-
-	const handleLogoutt = async () => {
-		try {
-			await logoutUser()
-			navigate('/authorization')
-		} catch (error) {
-			console.log(error)
-		}
-	}
-
-	const { userData, loading } = useGetUserData()
-
-	const handleUpdateTheme = async (theme: 'light' | 'dark') => {
-		if (userData) {
-			await updateUserTheme({ theme, uid: userData.uid } as Partial<TUser>)
-		}
-	}
+	const [showSideBar, toggleSideBarVisible] = useToggle()
 
 	return (
 		<div className='flex'>
 			<div
 				className={clsx(
 					'min-w-72 min-h-screen bg-accent lg:translate-x-0 flex flex-col gap-4 lg:relative absolute z-10 p-6 transition-all duration-300 ease-in-out',
-					state ? 'translate-x-0' : '-translate-x-full'
+					showSideBar ? 'translate-x-0' : '-translate-x-full'
 				)}
 			>
-				<X className='lg:hidden cursor-pointer mb-2' onClick={() => toggle()} />
+				<X
+					className='lg:hidden cursor-pointer mb-2'
+					onClick={toggleSideBarVisible}
+				/>
 
-				<div
-					className='bg-background rounded-lg py-2 pl-2 font-medium  flex cursor-pointer'
-					onClick={() => navigate('/dashboard')}
-				>
-					Dashboard
-				</div>
-				{/* <div
-					className='bg-background rounded-lg py-2 pl-2 font-regular  cursor-pointer flex'
-					onClick={() => navigate('/statistics')}
-				>
-					Statistics
-				</div> */}
+				<nav>
+					<Link
+						to='/dashboard'
+						className='bg-background rounded-lg py-2 pl-2 font-medium  flex cursor-pointer'
+					>
+						Dashboard
+					</Link>
+				</nav>
 			</div>
 			<div className='flex flex-col w-full'>
 				<div className='h-20 flex justify-between items-center px-6'>
 					<AlignJustify
-						onClick={() => toggle()}
+						onClick={toggleSideBarVisible}
 						className='text-foreground cursor-pointer lg:w-0'
 					/>
 
@@ -84,33 +54,7 @@ export const Outlet: React.FC<OutletProps> = ({ children }) => {
 							<DialogHeader>
 								<DialogTitle>Settings</DialogTitle>
 							</DialogHeader>
-							{loading ? (
-								<div>loading...</div>
-							) : (
-								<div className='flex flex-col gap-4'>
-									<div>{userData?.email}</div>
-									<div className='flex justify-between'>
-										<div className='font-semibold'>Theme</div>
-										<Select
-											defaultValue={userData?.theme}
-											onValueChange={value =>
-												handleUpdateTheme(value as 'light' | 'dark')
-											}
-										>
-											<SelectTrigger className='w-[180px]'>
-												<SelectValue placeholder='Theme' />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value='light'>Light</SelectItem>
-												<SelectItem value='dark'>Dark</SelectItem>
-											</SelectContent>
-										</Select>
-									</div>
-									<Button className='max-w-20' onClick={() => handleLogoutt()}>
-										Logout
-									</Button>
-								</div>
-							)}
+							<Setting />
 						</DialogContent>
 					</Dialog>
 				</div>

@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { loginFormSchema as formSchema } from './constants/schemas'
+import { loginFormSchema as formSchema } from '../constants/schemas'
 export function LoginForm() {
 	const navigate = useNavigate()
 

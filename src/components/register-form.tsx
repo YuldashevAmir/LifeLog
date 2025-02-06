@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { registerFormSchema as formSchema } from './constants/schemas'
+import { registerFormSchema as formSchema } from '../constants/schemas'
 
 export function RegisterForm() {
 	const navigate = useNavigate()
