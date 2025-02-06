@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 export const useGetUserData = () => {
 	const [userData, setUserData] = useState<TUser | null>(null)
 	const [loading, setLoading] = useState<boolean>(true)
+	const [error, setError] = useState<string>('')
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
@@ -24,7 +25,7 @@ export const useGetUserData = () => {
 					console.error('Error fetching user data:', error)
 				}
 			} else {
-				throw Error
+				setError('user not authorized')
 			}
 			setLoading(false)
 		})
@@ -32,5 +33,5 @@ export const useGetUserData = () => {
 		return () => unsubscribe()
 	}, [])
 
-	return { userData, loading }
+	return { userData, loading, error }
 }

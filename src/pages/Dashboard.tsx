@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom'
 export const Dashboard: React.FC = () => {
 	const navigate = useNavigate()
 
-	const { userData, loading } = useGetUserData()
+	const { userData, loading, error } = useGetUserData()
 	const [stories, setStories] = useState<TStory[]>([])
 	const [filteredStories, setFilteredStories] = useState<TStory[]>([])
 	const [searchTerm, setSearchTerm] = useState('')
@@ -27,6 +27,7 @@ export const Dashboard: React.FC = () => {
 	const { setCurrentStory } = useStory()
 
 	useEffect(() => {
+		console.log('error', error)
 		const fetchStories = async () => {
 			if (!userData) return
 			const fetchedStories = await getUserStories(userData.uid)

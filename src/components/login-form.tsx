@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 
@@ -13,26 +12,16 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { loginUser } from '@/firebase/userService'
+import { useToggle } from '@/hooks/useToggle'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-
-const formSchema = z.object({
-	email: z.string().min(4, {
-		message: 'Email must be at least 4 characters.',
-	}),
-	password: z.string().min(6, {
-		message: 'Password must be at least 6 characters.',
-	}),
-})
-
+import { loginFormSchema as formSchema } from './constants/schemas'
 export function LoginForm() {
 	const navigate = useNavigate()
 
-	const [showPassword, setShowPassword] = useState(false)
-
-	const togglePasswordVisibility = () => setShowPassword(prev => !prev)
+	const [showPassword, togglePasswordVisibility] = useToggle(false)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
