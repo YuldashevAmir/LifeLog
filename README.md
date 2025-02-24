@@ -1,50 +1,52 @@
-# React + TypeScript + Vite
+# LifeLog - Daily Event & Mood Tracker 📝
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LifeLog is a personal journaling and event-sharing application that allows users to log their daily experiences in the morning, noon, and evening. Users can also set a general mood for the day, write an overview, and filter their stories by date (7-day and 30-day views) or search entries by title. Built with React.js, Zustand, and Firebase, LifeLog provides a seamless and intuitive journaling experience.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+🌞 Log Daily Events - Add morning, noon, and evening entries.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+😊 Set Mood of the Day - Choose your overall mood for the day.
 
-- Configure the top-level `parserOptions` property like this:
+📝 Write Daily Overview - Summarize your day in a few sentences.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+📅 Filter by Date - View entries from the past 7 days or 30 days.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+🔍 Search by Title - Quickly find journal entries using keywords.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🛠 Technologies Used
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Frontend: React.js
+
+State Management: Zustand
+
+Database & Authentication: Firebase
+
+## 🔧 Installation
+
+### Ensure you have Node.js installed, then follow these steps:
+
+### Clone the repository
+#### git clone https://github.com/yourusername/LifeLog.git
+#### cd LifeLog
+
+### Install dependencies
+#### npm install
+
+# Start the development server
+npm run dev
+
+## 🚀 Usage
+
+Open the application in your browser.
+
+Log your daily events (morning, noon, and evening).
+
+Choose your overall mood and write a summary of the day.
+
+Use filters to view logs from the past 7 or 30 days.
+
+Search entries by title to quickly find past stories.
+
+🚀 Start journaling your life today with LifeLog! 🎉
